@@ -1,4 +1,4 @@
-﻿using ApiRestLoanInstallment.Features.MonthlyFees.Dto;
+﻿using ApiRestLoanInstallment.Domain.Commands;
 using ApiRestLoanInstallment.Models;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

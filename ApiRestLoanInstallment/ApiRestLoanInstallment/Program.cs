@@ -1,4 +1,4 @@
-using ApiRestLoanInstallment;
+using ApiRestLoanInstallment.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 

@@ -1,7 +1,7 @@
 ﻿using ApiRestLoanInstallment.Models;
 using MediatR;
 
-namespace ApiRestLoanInstallment.Features.MonthlyFees.Dto
+namespace ApiRestLoanInstallment.Domain.Commands
 {
     public class SaveMonthlyFeeCommand : IRequest<List<MonthlyFee>>
     {

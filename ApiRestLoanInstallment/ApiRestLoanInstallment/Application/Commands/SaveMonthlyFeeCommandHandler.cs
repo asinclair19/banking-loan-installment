@@ -1,11 +1,12 @@
-﻿using ApiRestLoanInstallment.Features.MonthlyFees.Dto;
-using ApiRestLoanInstallment.Models;
+﻿using ApiRestLoanInstallment.Models;
 using MediatR;
 using System.Text.Json.Serialization;
 using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
+using ApiRestLoanInstallment.Domain.Commands;
+using ApiRestLoanInstallment.Infrastructure.Persistence;
 
-namespace ApiRestLoanInstallment.Features.MonthlyFees
+namespace ApiRestLoanInstallment.Application.Commands
 {
     public class SaveMonthlyFeeCommandHandler : IRequestHandler<SaveMonthlyFeeCommand, List<MonthlyFee>>
     {
@@ -24,7 +25,7 @@ namespace ApiRestLoanInstallment.Features.MonthlyFees
                 //MonthlyFee = (Amount * Rate) / (1 - Math.Pow(1 + Rate, - Duration));
                 double doubleRate = (double)request.Rate;
                 double doubleAmount = (double)request.Amount;
-                decimal total = (decimal)(doubleAmount * doubleRate / (1 - Math.Pow((1 + doubleRate), -request.Duration)));
+                decimal total = (decimal)(doubleAmount * doubleRate / (1 - Math.Pow(1 + doubleRate, -request.Duration)));
 
                 var fee = new MonthlyFee
                 {

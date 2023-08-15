@@ -1,7 +1,7 @@
 ﻿using ApiRestLoanInstallment.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiRestLoanInstallment
+namespace ApiRestLoanInstallment.Infrastructure.Persistence
 {
     public class FeeDbContext : DbContext
     {
