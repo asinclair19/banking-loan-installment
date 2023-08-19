@@ -24,16 +24,22 @@ namespace ApiRestLoanInstallment.Application.Commands
         {
             try
             {
-                //MonthlyFee = (Amount * Rate) / (1 - Math.Pow(1 + Rate, - Duration));
-                double doubleRate = (double)request.Rate;
+                //MonthlyFee = (Amount * MonthlyRate) / (1 - Math.Pow(1 + MonthlyRate, - Duration));
+                //periodicity: Monthly=1200
+                double periodicity = 1200;
+                double monthlyRate = ((double)request.AnualRate) / periodicity;
                 double doubleAmount = (double)request.Amount;
-                decimal total = (decimal)(doubleAmount * doubleRate / (1 - Math.Pow(1 + doubleRate, -request.Duration)));
+                int intDuration = request.Duration;
+                decimal total = (decimal)(doubleAmount * monthlyRate / (1 - Math.Pow(1 + monthlyRate, -intDuration)));
+                total = Math.Round(total, 2);
 
                 var fee = new MonthlyFee
                 {
                     Amount = request.Amount,
-                    Rate = request.Rate,
+                    AnualRate = request.AnualRate,
                     Duration = request.Duration,
+                    Periodicity = (int)periodicity,
+                    PercentRate = (decimal)monthlyRate,
                     MontlyFee = total
                 };
                 _context.MonthlyFees.Add(fee);
