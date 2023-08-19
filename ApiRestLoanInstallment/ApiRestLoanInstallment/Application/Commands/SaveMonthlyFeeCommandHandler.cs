@@ -5,17 +5,19 @@ using Newtonsoft.Json;
 using System.Reflection.Metadata.Ecma335;
 using ApiRestLoanInstallment.Domain.Commands;
 using ApiRestLoanInstallment.Infrastructure.Persistence;
+using ApiRestLoanInstallment.Infrastructure;
 
 namespace ApiRestLoanInstallment.Application.Commands
 {
     public class SaveMonthlyFeeCommandHandler : IRequestHandler<SaveMonthlyFeeCommand, List<MonthlyFee>>
     {
         private readonly FeeDbContext _context;
-        //private readonly IMessageProducer _messageProducer;
+        private readonly IMessageProducer _messageProducer;
 
-        public SaveMonthlyFeeCommandHandler(FeeDbContext context)
+        public SaveMonthlyFeeCommandHandler(FeeDbContext context, IMessageProducer messageProducer)
         {
             _context = context;
+            _messageProducer = messageProducer;
         }
 
         public async Task<List<MonthlyFee>> Handle(SaveMonthlyFeeCommand request, CancellationToken cancellationToken)
@@ -37,10 +39,14 @@ namespace ApiRestLoanInstallment.Application.Commands
                 _context.MonthlyFees.Add(fee);
                 await _context.SaveChangesAsync(cancellationToken);
 
-                //var message = JsonConvert.SerializeObject(fee);
-                //_messageProducer.Produce(message);
+                //for return new monthly fee
+                var newFee = _context.MonthlyFees.Where(a => a.MonthlyFeeId == fee.MonthlyFeeId).ToList();
+                
+                //RabbitMQ
+                var message = JsonConvert.SerializeObject(newFee);
+                _messageProducer.Produce(message);
 
-                return _context.MonthlyFees.Where(a => a.MonthlyFeeId == fee.MonthlyFeeId).ToList();
+                return newFee;
 
             }
             catch (Exception ex)

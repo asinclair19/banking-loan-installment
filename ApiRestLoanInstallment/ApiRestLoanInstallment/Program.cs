@@ -1,3 +1,4 @@
+using ApiRestLoanInstallment.Infrastructure;
 using ApiRestLoanInstallment.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -11,9 +12,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//infraestructure
-//builder.Services.AddScoped<IMessageProducer, TransactionPublisher>();
-//builder.Services.AddScoped<IMessageConsumer, TransactionConsumer>();
+//Rabbit MQ
+builder.Services.AddScoped<IMessageProducer, FeePublisher>();
+builder.Services.AddScoped<IMessageConsumer, FeeConsumer>();
 
 //dbcontext
 builder.Services.AddDbContext<FeeDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
